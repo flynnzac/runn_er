@@ -2,6 +2,8 @@
 
 Runn\_er processes memos from Memo\_er. This repo includes a script to make it easy to get set up with a Runn_er to use on memoer.io.
 
+There is also a video walkthrough of how to do this step-by-step on a Debian AWS instance: https://www.youtube.com/watch?v=Nm_ikB9-eOg
+
 To get started do the following on a Debian box (the AWS debian image is a clean way to do this). 
 
 1. Clone the repo into an empty, non-HOME directory, i.e. don't clone it to the HOME/runn\_er directory, clone it to HOME/environment/runn\_er directory. 
