@@ -1,6 +1,12 @@
+# Memo_er
+
+Memo\_er (https://memoer.io) is a different way of thinking about self-serve data analysis. Instead of creating dashboards and graphs, Memo\_er writes automated memos. The key idea is that self-serve data analysis should be just like normal data analysis done by a data scientist. Normal data analysis does not and should not just produce a series of graphs and dashboards. It should produce a document with a clear explanation of assumptions and conclusions. Memo\_er automates this process so that anyone on the team can provide the inputs to power the analysis.
+
+Data scientists can write Topics in Python and these get translated into Memo's by a Runn_er, which is the code contained in this repo.
+
 # Runn_er
 
-Runn\_er processes memos from Memo\_er. This repo includes a script to make it easy to get set up with a Runn_er to use on memoer.io.
+Runn\_er processes memos from Memo\_er. This repo includes a script to make it easy to get set up with a Runn\_er to use on memoer.io.
 
 There is also a video walkthrough of how to do this step-by-step on a Debian AWS instance: https://www.youtube.com/watch?v=Nm_ikB9-eOg
 
