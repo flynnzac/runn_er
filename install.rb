@@ -22,9 +22,23 @@ require 'open3'
 
 # Step 0. Make sure database doesn't exist.
 
-db_user = Readline.readline("Database user: ", false)
-db_password = Readline.readline("Database password: ", false)
-memo_er_host = Readline.readline("Memo_er host (i.e. https://memoer.io): ", false)
+if ARGV.length == 0
+  db_user = Readline.readline("Database user: ", false)
+else
+  db_user = ARGV[0]
+end
+
+if ARGV.length <= 1
+  db_password = Readline.readline("Database password: ", false)
+else
+  db_password = ARGV[1]
+end
+
+if ARGV.length <= 2
+  memo_er_host = Readline.readline("Memo_er host (i.e. https://memoer.io): ", false)
+else
+  memo_er_host = ARGV[2]
+end
 
 con = PG::Connection.new user: db_user, password: db_password, dbname: "postgres"
 res = con.exec "SELECT 1 FROM pg_database WHERE datname='runn_er'"
@@ -40,7 +54,11 @@ ENV["GNUPGHOME"] = Dir.pwd + "/.gnupg"
 Dir.mkdir(Dir.pwd + "/.gnupg")
 File.chmod 0700, Dir.pwd + "/.gnupg"
 
-runn_er_passphrase = SecureRandom.alphanumeric(20)
+if ARGV.length <= 3
+  runn_er_passphrase = SecureRandom.alphanumeric(20)
+else
+  runn_er_passphrase = ARGV[3]
+end
 
 ctx = GPGME::Ctx.new :armor => true
 ctx.generate_key(
