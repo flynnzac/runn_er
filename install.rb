@@ -69,7 +69,7 @@ runn_er_creds = "
 RUNN_ER_HOST = \"localhost\"
 RUNN_ER_DB = \"runn_er\"
 RUNN_ER_USER = \"#{db_user}\"
-RUNN_ER_PASSWORD = \"#{db_password}\"
+RUNN_ER_PASSWORD = '#{db_password}'
 RUNN_ER_GPG_PASS = \"#{runn_er_passphrase}\"
 "
 
@@ -90,8 +90,8 @@ end
 
 # Step 3. Create database and environment
 
-`echo "CREATE DATABASE runn_er;" | PGPASSWORD="#{db_password}" psql -U #{db_user} postgres`
-`cat runn_er/sql/schema.sql | PGPASSWORD="#{db_password}" psql -U #{db_user} runn_er`
+`echo "CREATE DATABASE runn_er;" | PGPASSWORD='#{db_password}' psql -U #{db_user} postgres`
+`cat runn_er/sql/schema.sql | PGPASSWORD='#{db_password}' psql -U #{db_user} runn_er`
 Dir.chdir("runn_er") do
   `python3 hash.py #{runn_er_passphrase}`
 end
