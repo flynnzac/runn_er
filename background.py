@@ -19,6 +19,32 @@ import logging
 import os
 from runn_er.config import MEMOER_HOME
 
+def process(method, args):
+    if args["reqs"] != "":
+        requirement.install_requirements(args["reqs"])
+
+    try:
+        logger = logging.getLogger(args["result_id"])
+        log_path = os.path.join(
+            MEMOER_HOME,
+            "logs",
+            args["result_id"] + ".log"
+        )
+        logger.addHandler(
+            logging.FileHandler(log_path, encoding="utf-8")
+        )
+    except:
+        print("Creating logger failed")
+        logger = None
+
+    try:
+        requirement.reinstall_requirements(logger)
+        del args["reqs"]
+        runner.create_memo(method, args)
+    except Exception as e:
+        print(str(e))
+    
+
 class TaskQueue(threading.Thread):
     def __init__(self, queue):
         self.queue = queue
@@ -29,33 +55,15 @@ class TaskQueue(threading.Thread):
             val = self.queue.get()
             if val is None:
                 return
-
             method, args = val
-
-            if args["reqs"] != "":
-                requirement.install_requirements(args["reqs"])
-
-            try:
-                logger = logging.getLogger(args["result_id"])
-                log_path = os.path.join(
-                    MEMOER_HOME,
-                    "logs",
-                    args["result_id"] + ".log"
-                )
-                logger.addHandler(
-                    logging.FileHandler(log_path, encoding="utf-8")
-                )
-            except:
-                print("Creating logger failed")
-                logger = None
-
-            try:
-                requirement.reinstall_requirements(logger)
-                del args["reqs"]
-                runner.create_memo(method, args)
-            except Exception as e:
-                print(str(e))
-
+            if method=="kill":
+                kill_path = os.path.join(MEMOER_HOME,
+                                         "results", "_kill.txt")
+                with open(kill_path, "w") as f:
+                    f.write("kill")
+            else:
+                process(method, args)
+            
 class TaskQueues:
   def __init__(self, n_threads):
     self.tasks = [ TaskQueue(queue.Queue())

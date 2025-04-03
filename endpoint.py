@@ -14,7 +14,7 @@
 import os
 import uuid
 import bcrypt
-from runn_er.memo import set_status
+from runn_er.memo import set_status, load_result
 from runn_er.config import MEMOER_HOME
 
 def check_arg(args, req, resp):
@@ -207,41 +207,26 @@ class ResultEndpoint:
                 "data": "invalid result_id."
             }
             return 
-        
-        path = os.path.join(MEMOER_HOME,
-                            "results", result_id + "function.json")
-        path_check = os.path.join(MEMOER_HOME,
-                                  "results", result_id + "_finished.txt")
-        path_given = os.path.join(MEMOER_HOME,
-                                  "results", result_id + "given.json")
-        path_conclude = os.path.join(MEMOER_HOME,
-                                     "results", result_id + "conclude.json")
 
-        if os.path.isfile(path_check):
-            with open(path, "r") as f:
-                text = f.read()
-            resp.media = {
-                "status": "success",
-                "data": text
-            }
-        else:
-            resp.media = {
-                "status": "not_ready",
-                "data": "Result not ready."
-            }
+        resp.media = load_result(result_id)
+
+class KillEndpoint:
+    def __init__(self, tq, conn):
+        self.tq = tq
+        self.conn = conn
+
+    def on_post(self, req, resp):
+        # creates a file that a script can check to initiate a shutdown
+        key_check = check_api(self.conn, req)
+        if not key_check:
+            resp.media = { "status": "error",
+                           "data": "invalid key." }
+            return
+        elif not key_check[1]:
+            resp.media = { "status": "error",
+                           "data": "invalid permissions." }
             return
 
-        if os.path.isfile(path_given):
-            with open(path_given, "r") as f:
-                text = f.read()
-            resp.media["given"] = text
+        self.tq.put(("kill", {}))
 
-        if os.path.isfile(path_conclude):
-            with open(path_conclude, "r") as f:
-                text = f.read()
-
-            resp.media["conclude"] = text
-                
-        
-        
         

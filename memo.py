@@ -20,3 +20,43 @@ def set_status(result_id, status):
         f.write(status)
 
         
+def load_result(result_id):
+
+    result = {}
+    path = os.path.join(MEMOER_HOME,
+                        "results", result_id + "function.json")
+    path_check = os.path.join(MEMOER_HOME,
+                              "results", result_id + "_finished.txt")
+    path_given = os.path.join(MEMOER_HOME,
+                              "results", result_id + "given.json")
+    path_conclude = os.path.join(MEMOER_HOME,
+                                 "results", result_id + "conclude.json")
+
+    if os.path.isfile(path_check):
+        with open(path, "r") as f:
+            text = f.read()
+        result = {
+            "status": "success",
+            "data": text
+        }
+    else:
+        result = {
+            "status": "not_ready",
+            "data": "Result not ready."
+        }
+        return result
+
+    if os.path.isfile(path_given):
+        with open(path_given, "r") as f:
+            text = f.read()
+        result["given"] = text
+
+    if os.path.isfile(path_conclude):
+        with open(path_conclude, "r") as f:
+            text = f.read()
+
+        result["conclude"] = text
+
+    return result
+
+    
