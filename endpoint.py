@@ -16,6 +16,7 @@ import uuid
 import bcrypt
 from runn_er.memo import set_status, load_result
 from runn_er.config import MEMOER_HOME
+import gnupg
 
 def check_arg(args, req, resp):
     body = req.get_media()
@@ -229,4 +230,25 @@ class KillEndpoint:
 
         self.tq.put(("kill", {}))
 
+class GPGKeyEndpoint:
+    def __init__(self, conn):
+        self.conn = conn
+
+    def on_post(self, req, resp):
+        key_check = check_api(self.conn, req)
+        if not key_check:
+            resp.media = { "status": "error",
+                           "data": "invalid key." }
+            return
+        elif not key_check[1]:
+            resp.media = { "status": "error",
+                           "data": "invalid permissions." }
+            return
+
+        body = req.get_media()
+        gpg = gnupg.GPG(gnupghome=os.path.join(MEMOER_HOME, ".gnupg"))
+        key = gpg.export_keys(str(body["key"]))
+
+        resp.media = { "status": "success",
+                       "data": key }
         

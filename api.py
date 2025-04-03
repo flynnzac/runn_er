@@ -21,7 +21,9 @@ from runn_er.endpoint import (
     RunEndpoint,
     ResultEndpoint,
     StatusEndpoint,
-    HealthEndpoint
+    HealthEndpoint,
+    KillEndpoint,
+    GPGKeyEndpoint
 )
 from runn_er.background import TaskQueues
 from runn_er.crypt import crypt_json_handler
@@ -51,3 +53,5 @@ app.add_route('/run', RunEndpoint(tq, conn))
 app.add_route('/result', ResultEndpoint(conn))
 app.add_route('/status', StatusEndpoint(conn))
 app.add_route('/health', HealthEndpoint(conn))
+app.add_route('/kill', KillEndpoint(tq, conn))
+app.add_route('/gpgkey', GPGKeyEndpoint(conn))
